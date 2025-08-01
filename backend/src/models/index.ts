@@ -6,21 +6,33 @@ import { PerfumeModel, initPerfumeModel } from './Perfume';
 import { OrderModel, initOrderModel } from './Order';
 import { OrderItemModel, initOrderItemModel } from './OrderItem';
 
-const sequelize = new Sequelize({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'antaali_erp',
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || '',
-  dialect: (process.env.DB_DIALECT as any) || 'postgres',
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-});
+// Use DATABASE_URL if available (Railway), otherwise use individual variables
+const sequelize = process.env.DATABASE_URL 
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+      },
+    })
+  : new Sequelize({
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      database: process.env.DB_NAME || 'antaali_erp',
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || '',
+      dialect: (process.env.DB_DIALECT as any) || 'postgres',
+      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+      },
+    });
 
 // Initialize models
 const User = initUserModel(sequelize);
