@@ -6,6 +6,7 @@ import { User } from '../models';
 import { validateRequest } from '../middleware/validation';
 import { loginSchema, registerSchema } from '../middleware/validation';
 import { logger } from '../utils/logger';
+import { authRateLimit } from '../middleware/security';
 
 interface JWTPayload {
   userId: number;
@@ -15,7 +16,7 @@ interface JWTPayload {
 const router = express.Router();
 
 // Register
-router.post('/register', validateRequest(registerSchema), async (req, res) => {
+router.post('/register', authRateLimit, validateRequest(registerSchema), async (req, res) => {
   try {
     const { username, email, password, role, storeId } = req.body;
 
@@ -71,7 +72,7 @@ router.post('/register', validateRequest(registerSchema), async (req, res) => {
 });
 
 // Login
-router.post('/login', validateRequest(loginSchema), async (req, res) => {
+router.post('/login', authRateLimit, validateRequest(loginSchema), async (req, res) => {
   try {
     const { username, password } = req.body;
 
