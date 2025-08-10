@@ -83,14 +83,7 @@ const Login: React.FC = () => {
           </button>
         </form>
 
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-700 mb-2">حسابات تجريبية:</h3>
-          <div className="text-sm text-gray-600 space-y-1">
-            <div>المدير: admin / admin123</div>
-            <div>المحل: shop1 / shop123</div>
-            <div>المصنع: factory / factory123</div>
-          </div>
-        </div>
+
       </div>
     </div>
   );

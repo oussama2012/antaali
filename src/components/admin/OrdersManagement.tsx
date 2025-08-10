@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import { ShoppingCart, Eye, Truck, CheckCircle, Clock, FileText } from 'lucide-react';
-import { mockOrders, mockPerfumes } from '../../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { ShoppingCart, Eye, Truck, CheckCircle, Clock, FileText, X } from 'lucide-react';
+import { mockPerfumes } from '../../data/mockData';
 import { Order } from '../../types';
+import { orderService } from '../../services/orderService';
 
 const OrdersManagement: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [orders, setOrders] = useState<Order[]>([]);
+  
+  useEffect(() => {
+    setOrders(orderService.getAllOrders());
+  }, []);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'preparing' | 'delivered'>('all');
 
   const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
-    setOrders(prev => prev.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus, updatedAt: new Date().toISOString() }
-        : order
-    ));
+    if (orderService.updateOrderStatus(orderId, newStatus)) {
+      setOrders(orderService.getAllOrders());
+    }
   };
 
   const getPerfumeName = (perfumeId: string) => {

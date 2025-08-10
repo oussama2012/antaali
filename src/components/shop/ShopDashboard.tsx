@@ -10,9 +10,11 @@ import {
   Minus,
   X
 } from 'lucide-react';
-import { mockPerfumes, mockOrders, mockStock } from '../../data/mockData';
+import { mockPerfumes } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
 import { OrderItem, Order } from '../../types';
+import { orderService } from '../../services/orderService';
+import { inventoryService } from '../../services/inventoryService';
 
 const ShopDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -23,7 +25,13 @@ const ShopDashboard: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
 
   // فلترة الطلبات الخاصة بالمحل
-  const shopOrders = mockOrders.filter(order => order.shopId === user?.shopId);
+  const [orders, setOrders] = useState<Order[]>([]);
+  
+  React.useEffect(() => {
+    if (user?.shopId) {
+      setOrders(orderService.getOrdersByShop(user.shopId));
+    }
+  }, [user?.shopId]);
 
   const addToCart = () => {
     if (!selectedPerfume) return;
@@ -73,16 +81,24 @@ const ShopDashboard: React.FC = () => {
 
   const submitOrder = () => {
     if (cart.length === 0) return;
+    if (!user?.shopId) return;
 
-    // في التطبيق الحقيقي، هذا سيرسل الطلب إلى الخادم
-    alert('تم إرسال الطلب بنجاح! سيتم مراجعته من قبل المصنع.');
-    setCart([]);
-    setCurrentView('orders');
+    const result = orderService.createOrder(user.shopId, user.name || 'محل غير معروف', cart);
+    
+    if (result.success) {
+      alert('تم إرسال الطلب بنجاح! سيتم مراجعته من قبل المصنع.');
+      setCart([]);
+      setCurrentView('orders');
+      // تحديث قائمة الطلبات
+      setOrders(orderService.getOrdersByShop(user.shopId));
+    } else {
+      const errorMessage = result.errors?.join('\n') || 'حدث خطأ في إرسال الطلب';
+      alert(`فشل في إرسال الطلب:\n${errorMessage}`);
+    }
   };
 
   const getAvailableStock = (perfumeId: string, size: string) => {
-    const stockItem = mockStock.find(s => s.perfumeId === perfumeId && s.size === size);
-    return stockItem?.quantity || 0;
+    return inventoryService.getAvailableQuantity(perfumeId, size);
   };
 
   const getStatusLabel = (status: Order['status']) => {
@@ -147,13 +163,13 @@ const ShopDashboard: React.FC = () => {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">طلباتي الأخيرة</h2>
             
-            {shopOrders.length === 0 ? (
+            {orders.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 لا توجد طلبات حتى الآن
               </div>
             ) : (
               <div className="space-y-4">
-                {shopOrders.map((order) => (
+                {orders.map((order) => (
                   <div key={order.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3 space-x-reverse">
@@ -350,7 +366,7 @@ const ShopDashboard: React.FC = () => {
                 { status: 'delivered', label: 'تم التوصيل', color: 'green', icon: CheckCircle }
               ].map((statusInfo) => {
                 const Icon = statusInfo.icon;
-                const statusOrders = shopOrders.filter(order => order.status === statusInfo.status);
+                const statusOrders = orders.filter((order: Order) => order.status === statusInfo.status);
                 
                 return (
                   <div key={statusInfo.status} className="border border-gray-200 rounded-lg p-4">

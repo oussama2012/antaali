@@ -8,21 +8,6 @@ export const mockUsers: User[] = [
     password: 'admin123',
     role: 'admin',
     name: 'مدير النظام'
-  },
-  {
-    id: '2',
-    username: 'shop1',
-    password: 'shop123',
-    role: 'shop',
-    name: 'محل الورود',
-    shopId: '1'
-  },
-  {
-    id: '3',
-    username: 'factory',
-    password: 'factory123',
-    role: 'factory',
-    name: 'مسؤول المصنع'
   }
 ];
 

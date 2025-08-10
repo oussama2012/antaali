@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Store, Plus, Edit2, Trash2, Phone, Mail, MapPin } from 'lucide-react';
 import { mockShops } from '../../data/mockData';
 import { Shop } from '../../types';
+import { userService } from '../../services/userService';
 
 const ShopManagement: React.FC = () => {
   const [shops, setShops] = useState<Shop[]>(mockShops);
@@ -13,7 +14,10 @@ const ShopManagement: React.FC = () => {
     address: '',
     phone: '',
     email: '',
-    managerId: ''
+    managerId: '',
+    managerUsername: '',
+    managerPassword: '',
+    managerName: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,20 +27,38 @@ const ShopManagement: React.FC = () => {
       // تحديث محل موجود
       setShops(prev => prev.map(shop => 
         shop.id === editingShop.id 
-          ? { ...shop, ...formData }
+          ? { ...shop, name: formData.name, address: formData.address, phone: formData.phone, email: formData.email }
           : shop
       ));
       setEditingShop(null);
     } else {
       // إضافة محل جديد
+      // التحقق من عدم وجود اسم المستخدم مسبقاً
+      if (userService.userExists(formData.managerUsername)) {
+        alert('اسم المستخدم موجود مسبقاً، يرجى اختيار اسم مستخدم آخر');
+        return;
+      }
+
+      // إنشاء حساب مدير المحل
+      const managerUser = userService.addUser({
+        username: formData.managerUsername,
+        password: formData.managerPassword,
+        role: 'shop',
+        name: formData.managerName
+      });
+
       const newShop: Shop = {
         id: Date.now().toString(),
-        ...formData
+        name: formData.name,
+        address: formData.address,
+        phone: formData.phone,
+        email: formData.email,
+        managerId: managerUser.id
       };
       setShops(prev => [...prev, newShop]);
     }
     
-    setFormData({ name: '', address: '', phone: '', email: '', managerId: '' });
+    setFormData({ name: '', address: '', phone: '', email: '', managerId: '', managerUsername: '', managerPassword: '', managerName: '' });
     setShowAddForm(false);
   };
 
@@ -47,7 +69,10 @@ const ShopManagement: React.FC = () => {
       address: shop.address,
       phone: shop.phone,
       email: shop.email,
-      managerId: shop.managerId
+      managerId: shop.managerId,
+      managerUsername: '',
+      managerPassword: '',
+      managerName: ''
     });
     setShowAddForm(true);
   };
@@ -126,17 +151,46 @@ const ShopManagement: React.FC = () => {
                 />
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">معرف المدير</label>
-                <input
-                  type="text"
-                  value={formData.managerId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, managerId: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  placeholder="معرف المستخدم المسؤول عن المحل"
-                  required
-                />
-              </div>
+              {!editingShop && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">اسم مدير المحل</label>
+                    <input
+                      type="text"
+                      value={formData.managerName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managerName: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="الاسم الكامل لمدير المحل"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">اسم المستخدم لمدير المحل</label>
+                    <input
+                      type="text"
+                      value={formData.managerUsername}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managerUsername: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="اسم المستخدم للدخول"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">كلمة المرور لمدير المحل</label>
+                    <input
+                      type="password"
+                      value={formData.managerPassword}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managerPassword: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="كلمة المرور للدخول"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                </>
+              )}
               
               <div className="md:col-span-2 flex justify-end space-x-3 space-x-reverse">
                 <button
@@ -144,7 +198,7 @@ const ShopManagement: React.FC = () => {
                   onClick={() => {
                     setShowAddForm(false);
                     setEditingShop(null);
-                    setFormData({ name: '', address: '', phone: '', email: '', managerId: '' });
+                    setFormData({ name: '', address: '', phone: '', email: '', managerId: '', managerUsername: '', managerPassword: '', managerName: '' });
                   }}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                 >

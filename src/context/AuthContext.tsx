@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
-import { mockUsers } from '../data/mockData';
+import { userService } from '../services/userService';
 
 interface AuthContextType {
   user: User | null;
@@ -31,9 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = (username: string, password: string): boolean => {
-    const foundUser = mockUsers.find(
-      u => u.username === username && u.password === password
-    );
+    const foundUser = userService.findUser(username, password);
     
     if (foundUser) {
       setUser(foundUser);
