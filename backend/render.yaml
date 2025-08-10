@@ -26,9 +26,12 @@ services:
         value: 900000
       - key: RATE_LIMIT_MAX_REQUESTS
         value: 100
+      - key: FRONTEND_URL
+        value: https://antaali.netlify.app
 
-databases:
-  - name: antaali-db
-    databaseName: antaali_erp
-    user: antaali_user
-    plan: free
+# Using Supabase instead of Render database
+# databases:
+#   - name: antaali-db
+#     databaseName: antaali
+#     user: antaali_user
+#     plan: free

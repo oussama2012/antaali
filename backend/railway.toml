@@ -10,3 +10,12 @@ restartPolicyMaxRetries = 10
 [env]
 NODE_ENV = "production"
 PORT = "3001"
+FRONTEND_URL = "https://antaali.netlify.app"
+JWT_SECRET = "1220smoughen1220"
+
+# Railway PostgreSQL Database (automatically provided)
+PGHOST = "${{PGHOST}}"
+PGPORT = "${{PGPORT}}"
+PGDATABASE = "${{PGDATABASE}}"
+PGUSER = "${{PGUSER}}"
+PGPASSWORD = "${{PGPASSWORD}}"
