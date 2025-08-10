@@ -26,15 +26,15 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-amber-600">Antaali ERP</h1>
-              <span className="mx-4 text-gray-300">|</span>
-              <h2 className="text-lg font-medium text-gray-700">{title}</h2>
+              <h1 className="text-xl sm:text-2xl font-bold text-amber-600">Antaali ERP</h1>
+              <span className="mx-2 sm:mx-4 text-gray-300 hidden sm:inline">|</span>
+              <h2 className="text-sm sm:text-lg font-medium text-gray-700 hidden sm:block">{title}</h2>
             </div>
             
-            <div className="flex items-center space-x-4 space-x-reverse">
+            <div className="flex items-center space-x-2 sm:space-x-4 space-x-reverse">
               <div className="flex items-center space-x-2 space-x-reverse">
-                <User className="w-5 h-5 text-gray-500" />
-                <div className="text-sm">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                <div className="text-xs sm:text-sm hidden sm:block">
                   <div className="font-medium text-gray-700">{user?.name}</div>
                   <div className="text-gray-500">{getRoleLabel(user?.role || '')}</div>
                 </div>
@@ -42,10 +42,10 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
               
               <button
                 onClick={logout}
-                className="flex items-center space-x-2 space-x-reverse px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                className="flex items-center space-x-1 sm:space-x-2 space-x-reverse px-2 sm:px-3 py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <LogOut className="w-4 h-4" />
-                <span>خروج</span>
+                <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">خروج</span>
               </button>
             </div>
           </div>
@@ -53,8 +53,10 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+      <main className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+        <div className="py-4 sm:py-6">
+          {children}
+        </div>
       </main>
     </div>
   );

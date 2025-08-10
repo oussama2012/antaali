@@ -75,14 +75,14 @@ ${order.items.map(item =>
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-            <ShoppingCart className="w-6 h-6 text-amber-600 ml-2" />
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
+            <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 ml-2" />
             إدارة الطلبات
           </h2>
         </div>
 
         {/* Status Filter */}
-        <div className="flex space-x-4 space-x-reverse mb-6">
+        <div className="grid grid-cols-2 sm:flex sm:space-x-4 sm:space-x-reverse gap-2 sm:gap-0 mb-6">
           {[
             { key: 'all', label: 'جميع الطلبات' },
             { key: 'pending', label: 'قيد الانتظار' },
@@ -92,7 +92,7 @@ ${order.items.map(item =>
             <button
               key={filter.key}
               onClick={() => setStatusFilter(filter.key as any)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
                 statusFilter === filter.key
                   ? 'bg-amber-100 text-amber-700 border border-amber-200'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -103,81 +103,76 @@ ${order.items.map(item =>
           ))}
         </div>
 
-        {/* Orders Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-right py-3 px-4 font-medium text-gray-700">رقم الطلب</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">المحل</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">عدد المنتجات</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">تاريخ الطلب</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">الحالة</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-700">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order) => (
-                <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-4 px-4 font-medium text-gray-800">#{order.id}</td>
-                  <td className="py-4 px-4 text-gray-600">{order.shopName}</td>
-                  <td className="py-4 px-4 text-gray-600">
-                    {order.items.reduce((sum, item) => sum + item.quantity, 0)} قطعة
-                  </td>
-                  <td className="py-4 px-4 text-gray-600">
-                    {new Date(order.createdAt).toLocaleDateString('ar')}
-                  </td>
-                  <td className="py-4 px-4">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                      {order.status === 'pending' && <Clock className="w-3 h-3 ml-1" />}
-                      {order.status === 'preparing' && <Truck className="w-3 h-3 ml-1" />}
-                      {order.status === 'delivered' && <CheckCircle className="w-3 h-3 ml-1" />}
-                      {getStatusLabel(order.status)}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4">
-                    <div className="flex items-center space-x-2 space-x-reverse">
+        {/* Orders List - Mobile Responsive */}
+        <div className="space-y-4">
+          {filteredOrders.map((order) => (
+            <div key={order.id} className="bg-white border border-gray-200 rounded-lg p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-3">
+                <div className="flex items-center space-x-3 space-x-reverse">
+                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                  <div>
+                    <h3 className="font-medium text-gray-800 text-sm sm:text-base">طلب #{order.id}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600">{order.shopName}</p>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 sm:space-x-reverse">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                    {getStatusLabel(order.status)}
+                  </span>
+                  
+                  <div className="flex space-x-2 space-x-reverse">
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="p-1 sm:p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+                      title="عرض التفاصيل"
+                    >
+                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </button>
+                    
+                    {order.status === 'pending' && (
                       <button
-                        onClick={() => setSelectedOrder(order)}
-                        className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
-                        title="عرض التفاصيل"
+                        onClick={() => updateOrderStatus(order.id, 'preparing')}
+                        className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-xs sm:text-sm"
                       >
-                        <Eye className="w-4 h-4" />
+                        بدء التحضير
                       </button>
-                      
-                      {order.status === 'pending' && (
-                        <button
-                          onClick={() => updateOrderStatus(order.id, 'preparing')}
-                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
-                        >
-                          بدء التحضير
-                        </button>
-                      )}
-                      
-                      {order.status === 'preparing' && (
-                        <button
-                          onClick={() => updateOrderStatus(order.id, 'delivered')}
-                          className="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-sm"
-                        >
-                          تم التوصيل
-                        </button>
-                      )}
-                      
-                      {order.status === 'delivered' && (
-                        <button
-                          onClick={() => generateDeliveryNote(order)}
-                          className="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg"
-                          title="تحميل بون التوصيل"
-                        >
-                          <FileText className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    )}
+                    
+                    {order.status === 'preparing' && (
+                      <button
+                        onClick={() => updateOrderStatus(order.id, 'delivered')}
+                        className="px-2 sm:px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-xs sm:text-sm"
+                      >
+                        تم التوصيل
+                      </button>
+                    )}
+                    
+                    {order.status === 'delivered' && (
+                      <button
+                        onClick={() => generateDeliveryNote(order)}
+                        className="p-1 sm:p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg"
+                        title="تحميل بون التوصيل"
+                      >
+                        <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-500">التاريخ:</span>
+                  <span className="text-gray-900 mr-2">{new Date(order.createdAt).toLocaleDateString('ar')}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500">المنتجات:</span>
+                  <span className="text-gray-900 mr-2">{order.items.reduce((sum: number, item: any) => sum + item.quantity, 0)} قطعة</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {filteredOrders.length === 0 && (

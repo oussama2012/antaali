@@ -132,26 +132,26 @@ const ShopDashboard: React.FC = () => {
     <Layout title="لوحة تحكم المحل">
       <div className="space-y-6">
         {/* Navigation */}
-        <div className="bg-white rounded-lg shadow-sm p-4">
-          <div className="flex space-x-4 space-x-reverse">
+        <div className="mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:flex sm:space-x-4 sm:space-x-reverse">
             {[
-              { key: 'orders', label: 'طلباتي', icon: ShoppingCart },
-              { key: 'new-order', label: 'طلب جديد', icon: Plus },
-              { key: 'track', label: 'تتبع الطلبات', icon: Package }
-            ].map((item) => {
-              const Icon = item.icon;
+              { id: 'orders', label: 'طلباتي', icon: ShoppingCart },
+              { id: 'new-order', label: 'طلب جديد', icon: Plus },
+              { id: 'track', label: 'تتبع الطلبات', icon: Package }
+            ].map((tab) => {
+              const Icon = tab.icon;
               return (
                 <button
-                  key={item.key}
-                  onClick={() => setCurrentView(item.key as any)}
-                  className={`flex items-center space-x-2 space-x-reverse px-4 py-2 rounded-lg font-medium transition-colors ${
-                    currentView === item.key
+                  key={tab.id}
+                  onClick={() => setCurrentView(tab.id as 'orders' | 'new-order' | 'track')}
+                  className={`flex items-center justify-center sm:justify-start space-x-2 space-x-reverse px-3 sm:px-4 py-2 sm:py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
+                    currentView === tab.id
                       ? 'bg-amber-100 text-amber-700 border border-amber-200'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>{tab.label}</span>
                 </button>
               );
             })}
@@ -211,7 +211,7 @@ const ShopDashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Product Selection */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">إضافة منتجات</h2>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">إضافة منتج</h3>
               
               <div className="space-y-4">
                 <div>
@@ -219,7 +219,7 @@ const ShopDashboard: React.FC = () => {
                   <select
                     value={selectedPerfume}
                     onChange={(e) => setSelectedPerfume(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm sm:text-base"
                   >
                     <option value="">اختر العطر</option>
                     {mockPerfumes.map((perfume) => (
@@ -268,10 +268,10 @@ const ShopDashboard: React.FC = () => {
                     </button>
                     <input
                       type="number"
-                      value={quantity}
-                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       min="1"
+                      value={quantity}
+                      onChange={(e) => setQuantity(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm sm:text-base"
                     />
                     <button
                       onClick={() => setQuantity(quantity + 1)}
@@ -285,7 +285,7 @@ const ShopDashboard: React.FC = () => {
                 <button
                   onClick={addToCart}
                   disabled={!selectedPerfume}
-                  className="w-full px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="w-full bg-amber-600 text-white py-2 px-4 rounded-lg hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
                 >
                   إضافة إلى الطلب
                 </button>
@@ -301,7 +301,7 @@ const ShopDashboard: React.FC = () => {
                   لا توجد منتجات في الطلب
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {cart.map((item, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
@@ -359,7 +359,7 @@ const ShopDashboard: React.FC = () => {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">تتبع الطلبات</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {[
                 { status: 'pending', label: 'قيد الانتظار', color: 'yellow', icon: Clock },
                 { status: 'preparing', label: 'قيد التحضير', color: 'blue', icon: Truck },

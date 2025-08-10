@@ -53,24 +53,24 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <Layout title="لوحة تحكم المدير">
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
         {/* Sidebar */}
-        <div className="w-64 bg-white rounded-lg shadow-sm p-4">
-          <nav className="space-y-2">
+        <div className="w-full lg:w-64 bg-white rounded-lg shadow-sm p-4">
+          <nav className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:space-y-2 lg:block">
             {menuItems.map((item) => {
               const Icon = item.icon;
               return (
                 <button
                   key={item.id}
                   onClick={() => setCurrentView(item.id as AdminView)}
-                  className={`w-full flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-lg text-right transition-colors ${
+                  className={`w-full flex flex-col lg:flex-row items-center justify-center lg:justify-start space-y-1 lg:space-y-0 lg:space-x-3 lg:space-x-reverse px-2 lg:px-4 py-2 lg:py-3 rounded-lg text-center lg:text-right transition-colors ${
                     currentView === item.id
                       ? 'bg-amber-100 text-amber-700 border border-amber-200'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
+                  <Icon className="w-4 h-4 lg:w-5 lg:h-5" />
+                  <span className="text-xs lg:text-sm">{item.label}</span>
                 </button>
               );
             })}
@@ -78,7 +78,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           {renderContent()}
         </div>
       </div>

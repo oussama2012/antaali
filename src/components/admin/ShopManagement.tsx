@@ -86,14 +86,14 @@ const ShopManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-            <Store className="w-6 h-6 text-amber-600 ml-2" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center">
+            <Store className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 ml-2" />
             إدارة المحلات
           </h2>
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center space-x-2 space-x-reverse px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+            className="flex items-center space-x-2 space-x-reverse px-3 sm:px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
           >
             <Plus className="w-4 h-4" />
             <span>إضافة محل</span>
@@ -106,7 +106,7 @@ const ShopManagement: React.FC = () => {
             <h3 className="text-lg font-medium text-gray-800 mb-4">
               {editingShop ? 'تعديل المحل' : 'إضافة محل جديد'}
             </h3>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">اسم المحل</label>
                 <input
@@ -177,7 +177,7 @@ const ShopManagement: React.FC = () => {
                     />
                   </div>
                   
-                  <div className="md:col-span-2">
+                  <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">كلمة المرور لمدير المحل</label>
                     <input
                       type="password"
@@ -192,7 +192,7 @@ const ShopManagement: React.FC = () => {
                 </>
               )}
               
-              <div className="md:col-span-2 flex justify-end space-x-3 space-x-reverse">
+              <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 sm:space-x-reverse">
                 <button
                   type="button"
                   onClick={() => {
@@ -200,13 +200,13 @@ const ShopManagement: React.FC = () => {
                     setEditingShop(null);
                     setFormData({ name: '', address: '', phone: '', email: '', managerId: '', managerUsername: '', managerPassword: '', managerName: '' });
                   }}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors w-full sm:w-auto text-center"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                  className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors w-full sm:w-auto"
                 >
                   {editingShop ? 'تحديث' : 'إضافة'}
                 </button>
