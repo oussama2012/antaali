@@ -45,6 +45,20 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Debug endpoint - REMOVE in production
+app.get('/debug/env', (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: process.env.PORT,
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET',
+    SUPABASE_URL: process.env.SUPABASE_URL ? 'SET' : 'NOT SET',
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ? 'SET' : 'NOT SET',
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET',
+    JWT_SECRET: process.env.JWT_SECRET ? 'SET' : 'NOT SET'
+  });
+});
+
 // API routes
 app.use('/api', apiRoutes);
 

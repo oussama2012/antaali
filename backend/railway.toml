@@ -13,9 +13,8 @@ PORT = "3001"
 FRONTEND_URL = "https://antaali.netlify.app"
 JWT_SECRET = "1220smoughen1220"
 
-# Railway PostgreSQL Database (automatically provided)
-PGHOST = "${{PGHOST}}"
-PGPORT = "${{PGPORT}}"
-PGDATABASE = "${{PGDATABASE}}"
-PGUSER = "${{PGUSER}}"
-PGPASSWORD = "${{PGPASSWORD}}"
+# Supabase Database Configuration
+DATABASE_URL = "${{DATABASE_URL}}"
+SUPABASE_URL = "${{SUPABASE_URL}}"
+SUPABASE_ANON_KEY = "${{SUPABASE_ANON_KEY}}"
+SUPABASE_SERVICE_ROLE_KEY = "${{SUPABASE_SERVICE_ROLE_KEY}}"
